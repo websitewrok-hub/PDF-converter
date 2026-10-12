@@ -7,12 +7,14 @@
 
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Arial,sans-serif;
   background:#f5f7fb;
   color:#182230
 }
+
 header{
   background:#fff;
   padding:16px 5%;
@@ -21,8 +23,11 @@ header{
   justify-content:space-between;
   align-items:center
 }
+
 .logo{font-size:21px;font-weight:800}
+
 .container{max-width:750px;margin:35px auto;padding:15px}
+
 .card{
   background:white;
   border:1px solid #e5eaf2;
@@ -30,14 +35,18 @@ header{
   padding:24px;
   box-shadow:0 5px 25px #18223008
 }
+
 h1{font-size:28px;margin:0 0 10px}
+
 .subtitle{color:#718096;font-size:14px;line-height:1.6}
+
 label{
   display:block;
   font-size:14px;
   font-weight:700;
   margin:20px 0 9px
 }
+
 input,textarea,select{
   width:100%;
   padding:14px;
@@ -47,10 +56,13 @@ input,textarea,select{
   font-size:15px;
   outline:none
 }
+
 input:focus,textarea:focus,select:focus{
   border-color:#3867f4
 }
+
 textarea{height:190px;resize:vertical;line-height:1.7}
+
 button{
   border:0;
   border-radius:10px;
@@ -59,16 +71,18 @@ button{
   font-weight:700;
   cursor:pointer
 }
+
+button:disabled{opacity:.6;cursor:not-allowed}
+
 .primary{
   width:100%;
   margin-top:22px;
   background:#3867f4;
   color:white
 }
-.secondary{
-  background:#eef3ff;
-  color:#3867f4
-}
+
+.secondary{background:#eef3ff;color:#3867f4}
+
 .download{
   display:block;
   width:100%;
@@ -81,6 +95,7 @@ button{
   border-radius:10px;
   font-weight:700
 }
+
 .upload{
   border:2px dashed #cbd7ef;
   border-radius:13px;
@@ -88,18 +103,53 @@ button{
   text-align:center;
   background:#f9fbff
 }
+
 .upload p{color:#718096;font-size:13px;line-height:1.6}
+
 .tabs{display:flex;gap:10px;margin:22px 0}
+
 .tabs button{flex:1;background:#f0f3f8;color:#475467}
+
 .tabs button.active{background:#3867f4;color:white}
+
 #status{font-size:13px;line-height:1.6;margin-top:15px;color:#718096}
+
 #status.error{color:#d63838}
 #status.success{color:#16834a}
+
 .hidden{display:none!important}
+
 .file-list{font-size:13px;margin-top:10px}
-.file-row{display:flex;justify-content:space-between;gap:10px;padding:10px;border:1px solid #e5eaf2;border-radius:8px;margin-top:7px;overflow-wrap:anywhere}
+
+.file-row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:10px;
+  border:1px solid #e5eaf2;
+  border-radius:8px;
+  margin-top:7px;
+  overflow-wrap:anywhere
+}
+
 .file-row button{padding:5px 8px;color:#d63838;background:#fff0f0}
+
+#successBox{
+  margin-top:18px;
+  padding:22px 12px;
+  background:#effbf3;
+  border:1px solid #b9ebc9;
+  border-radius:13px;
+  text-align:center;
+  color:#16834a
+}
+
+#successBox h2{margin:0 0 8px;font-size:22px}
+
+#successBox p{margin:0;font-size:14px;line-height:1.6}
+
 footer{text-align:center;color:#718096;font-size:12px;padding:25px}
+
 @media(max-width:500px){
   .container{margin:18px auto;padding:12px}
   .card{padding:18px}
@@ -109,6 +159,7 @@ footer{text-align:center;color:#718096;font-size:12px;padding:25px}
 </head>
 
 <body>
+
 <header>
   <div class="logo">PDF Studio</div>
   <button class="secondary" id="topButton">Create PDF ↓</button>
@@ -135,7 +186,9 @@ footer{text-align:center;color:#718096;font-size:12px;padding:25px}
       <button class="secondary" id="browseButton" type="button">Choose Images</button>
       <input type="file" id="images" accept="image/jpeg,image/png,image/webp" multiple hidden>
     </div>
+
     <div class="file-list" id="fileList"></div>
+
     <label for="pageSize">Page size</label>
     <select id="pageSize">
       <option value="a4">A4</option>
@@ -162,6 +215,11 @@ footer{text-align:center;color:#718096;font-size:12px;padding:25px}
     ↓ Download PDF
   </a>
 
+  <div id="successBox" class="hidden" role="status" aria-live="polite">
+    <h2>🎉 Congratulations!</h2>
+    <p>Your PDF is ready. Your download has been started successfully.</p>
+  </div>
+
 </section>
 </main>
 
@@ -177,22 +235,24 @@ let selectedFiles = [];
 let currentPdfUrl = null;
 
 function status(message,type=""){
-  $("status").textContent=message;
-  $("status").className=type;
+  $("status").textContent = message;
+  $("status").className = type;
 }
 
 function clearDownload(){
   if(currentPdfUrl){
     URL.revokeObjectURL(currentPdfUrl);
-    currentPdfUrl=null;
+    currentPdfUrl = null;
   }
+
   $("downloadButton").classList.add("hidden");
   $("downloadButton").removeAttribute("href");
+  $("successBox").classList.add("hidden");
 }
 
 document.querySelectorAll(".tabs button").forEach(button=>{
   button.addEventListener("click",()=>{
-    mode=button.dataset.mode;
+    mode = button.dataset.mode;
 
     document.querySelectorAll(".tabs button").forEach(b=>{
       b.classList.toggle("active",b===button);
@@ -210,36 +270,43 @@ $("topButton").addEventListener("click",()=>{
   $("mainCard").scrollIntoView({behavior:"smooth"});
 });
 
-$("browseButton").addEventListener("click",()=>$("images").click());
+$("browseButton").addEventListener("click",()=>{
+  $("images").click();
+});
 
 $("images").addEventListener("change",event=>{
-  const allowed=["image/jpeg","image/png","image/webp"];
-  const incoming=Array.from(event.target.files);
-  const valid=incoming.filter(file=>allowed.includes(file.type));
+  const allowed = ["image/jpeg","image/png","image/webp"];
+  const incoming = Array.from(event.target.files);
+  const valid = incoming.filter(file=>allowed.includes(file.type));
 
   selectedFiles.push(...valid);
   renderFiles();
   clearDownload();
 
-  status(valid.length+" image(s) added.",valid.length?"success":"error");
-  event.target.value="";
+  status(
+    valid.length+" image(s) added.",
+    valid.length ? "success" : "error"
+  );
+
+  event.target.value = "";
 });
 
 function renderFiles(){
-  const list=$("fileList");
-  list.innerHTML="";
+  const list = $("fileList");
+  list.innerHTML = "";
 
   selectedFiles.forEach((file,index)=>{
-    const row=document.createElement("div");
-    row.className="file-row";
+    const row = document.createElement("div");
+    row.className = "file-row";
 
-    const name=document.createElement("span");
-    name.textContent=file.name;
+    const name = document.createElement("span");
+    name.textContent = file.name;
 
-    const remove=document.createElement("button");
-    remove.textContent="Remove";
-    remove.type="button";
-    remove.onclick=()=>{
+    const remove = document.createElement("button");
+    remove.textContent = "Remove";
+    remove.type = "button";
+
+    remove.onclick = ()=>{
       selectedFiles.splice(index,1);
       renderFiles();
       clearDownload();
@@ -252,72 +319,104 @@ function renderFiles(){
 }
 
 function filename(){
-  let name=$("filename").value.trim()||"My Document";
-  name=name.replace(/\.pdf$/i,"").replace(/[\\/:*?"<>|]/g,"_");
-  return (name||"My Document")+".pdf";
+  let name = $("filename").value.trim() || "My Document";
+  name = name.replace(/\.pdf$/i,"").replace(/[\\/:*?"<>|]/g,"_");
+
+  return (name || "My Document") + ".pdf";
 }
 
 function readImage(file){
   return new Promise((resolve,reject)=>{
-    const reader=new FileReader();
-    reader.onload=()=>{
-      const img=new Image();
-      img.onload=()=>resolve({img,data:reader.result,file});
-      img.onerror=()=>reject(new Error("Could not read "+file.name));
-      img.src=reader.result;
+    const reader = new FileReader();
+
+    reader.onload = ()=>{
+      const img = new Image();
+
+      img.onload = ()=>resolve({
+        img,
+        data:reader.result,
+        file
+      });
+
+      img.onerror = ()=>reject(new Error("Could not read "+file.name));
+      img.src = reader.result;
     };
-    reader.onerror=()=>reject(new Error("Could not open "+file.name));
+
+    reader.onerror = ()=>reject(new Error("Could not open "+file.name));
     reader.readAsDataURL(file);
   });
 }
 
 async function imagesToPdf(){
-  if(!selectedFiles.length)throw new Error("Please choose at least one image.");
+  if(!selectedFiles.length){
+    throw new Error("Please choose at least one image.");
+  }
 
-  const {jsPDF}=window.jspdf;
-  const size=$("pageSize").value;
-  let pdf=null;
+  const {jsPDF} = window.jspdf;
+  const size = $("pageSize").value;
+  let pdf = null;
 
   for(let i=0;i<selectedFiles.length;i++){
     status("Preparing image "+(i+1)+" of "+selectedFiles.length+"...");
 
-    const {img,data,file}=await readImage(selectedFiles[i]);
-    const ratio=img.width/img.height;
+    const {img,data,file} = await readImage(selectedFiles[i]);
 
-    if(size==="fit"){
-      let w=img.width*25.4/96;
-      let h=img.height*25.4/96;
-      const max=270;
-      const scale=Math.min(max/w,max/h,1);
-      w*=scale;
-      h*=scale;
+    if(size === "fit"){
+      let w = img.width * 25.4 / 96;
+      let h = img.height * 25.4 / 96;
 
-      const orientation=w>h?"landscape":"portrait";
+      const scale = Math.min(270/w,270/h,1);
+      w *= scale;
+      h *= scale;
+
+      const orientation = w > h ? "landscape" : "portrait";
 
       if(!pdf){
-        pdf=new jsPDF({orientation,unit:"mm",format:[w,h]});
+        pdf = new jsPDF({
+          orientation,
+          unit:"mm",
+          format:[w,h]
+        });
       }else{
         pdf.addPage([w,h],orientation);
       }
 
-      pdf.addImage(data,file.type==="image/png"?"PNG":"JPEG",0,0,w,h);
+      pdf.addImage(
+        data,
+        file.type === "image/png" ? "PNG" : "JPEG",
+        0,0,w,h
+      );
+
     }else{
       if(!pdf){
-        pdf=new jsPDF({orientation:"portrait",unit:"mm",format:size});
+        pdf = new jsPDF({
+          orientation:"portrait",
+          unit:"mm",
+          format:size
+        });
       }else{
         pdf.addPage(size,"portrait");
       }
 
-      const pw=pdf.internal.pageSize.getWidth();
-      const ph=pdf.internal.pageSize.getHeight();
-      const margin=10;
-      const scale=Math.min((pw-2*margin)/img.width,(ph-2*margin)/img.height);
-      const w=img.width*scale;
-      const h=img.height*scale;
-      const x=(pw-w)/2;
-      const y=(ph-h)/2;
+      const pw = pdf.internal.pageSize.getWidth();
+      const ph = pdf.internal.pageSize.getHeight();
+      const margin = 10;
 
-      pdf.addImage(data,file.type==="image/png"?"PNG":"JPEG",x,y,w,h);
+      const scale = Math.min(
+        (pw-2*margin)/img.width,
+        (ph-2*margin)/img.height
+      );
+
+      const w = img.width * scale;
+      const h = img.height * scale;
+      const x = (pw-w)/2;
+      const y = (ph-h)/2;
+
+      pdf.addImage(
+        data,
+        file.type === "image/png" ? "PNG" : "JPEG",
+        x,y,w,h
+      );
     }
   }
 
@@ -325,79 +424,147 @@ async function imagesToPdf(){
 }
 
 function textToPdf(){
-  const text=$("content").value.trim();
-  const heading=$("heading").value.trim();
+  const text = $("content").value.trim();
+  const heading = $("heading").value.trim();
 
-  if(!text)throw new Error("Please write or paste some text first.");
+  if(!text){
+    throw new Error("Please write or paste some text first.");
+  }
 
-  const {jsPDF}=window.jspdf;
-  const pdf=new jsPDF({unit:"mm",format:"a4"});
-  const margin=18;
-  const pageHeight=pdf.internal.pageSize.getHeight();
-  const width=pdf.internal.pageSize.getWidth()-margin*2;
-  let y=margin;
+  const {jsPDF} = window.jspdf;
+  const pdf = new jsPDF({unit:"mm",format:"a4"});
+  const margin = 18;
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const width = pdf.internal.pageSize.getWidth()-margin*2;
+
+  let y = margin;
 
   if(heading){
     pdf.setFont("helvetica","bold");
     pdf.setFontSize(18);
-    const lines=pdf.splitTextToSize(heading,width);
+
+    const lines = pdf.splitTextToSize(heading,width);
     pdf.text(lines,margin,y);
-    y+=lines.length*8+7;
+
+    y += lines.length*8+7;
   }
 
   pdf.setFont("helvetica","normal");
   pdf.setFontSize(11);
 
   for(const paragraph of text.split(/\r?\n/)){
-    const lines=paragraph.trim()?pdf.splitTextToSize(paragraph,width):[" "];
+    const lines = paragraph.trim()
+      ? pdf.splitTextToSize(paragraph,width)
+      : [" "];
 
     for(const line of lines){
-      if(y>pageHeight-margin){
+      if(y > pageHeight-margin){
         pdf.addPage();
-        y=margin;
+        y = margin;
       }
-      pdf.text(line||" ",margin,y);
-      y+=6;
+
+      pdf.text(line || " ",margin,y);
+      y += 6;
     }
-    y+=2;
+
+    y += 2;
   }
 
   return pdf;
 }
 
+/* Congratulations sound */
+function playSuccessSound(){
+  try{
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if(!AudioContext) return;
+
+    const audio = new AudioContext();
+
+    const notes = [523.25,659.25,783.99,1046.50];
+
+    notes.forEach((frequency,index)=>{
+      const oscillator = audio.createOscillator();
+      const gain = audio.createGain();
+
+      oscillator.connect(gain);
+      gain.connect(audio.destination);
+
+      oscillator.type = "sine";
+      oscillator.frequency.value = frequency;
+
+      const start = audio.currentTime + index*0.16;
+
+      gain.gain.setValueAtTime(0.001,start);
+      gain.gain.exponentialRampToValueAtTime(0.2,start+0.03);
+      gain.gain.exponentialRampToValueAtTime(0.001,start+0.32);
+
+      oscillator.start(start);
+      oscillator.stop(start+0.33);
+    });
+
+    setTimeout(()=>audio.close(),1200);
+  }catch(error){
+    console.log("Sound unavailable",error);
+  }
+}
+
 $("createButton").addEventListener("click",async()=>{
-  const button=$("createButton");
-  button.disabled=true;
-  button.textContent="Creating PDF...";
+  const button = $("createButton");
+
+  button.disabled = true;
+  button.textContent = "Creating PDF...";
+
   clearDownload();
 
   try{
-    if(!window.jspdf)throw new Error("PDF library could not load. Check your internet connection.");
+    if(!window.jspdf){
+      throw new Error("PDF library could not load. Check your internet connection.");
+    }
 
-    const pdf=mode==="images"?await imagesToPdf():textToPdf();
-    const blob=pdf.output("blob");
+    const pdf = mode === "images"
+      ? await imagesToPdf()
+      : textToPdf();
 
-    currentPdfUrl=URL.createObjectURL(blob);
-    const link=$("downloadButton");
+    const blob = pdf.output("blob");
 
-    link.href=currentPdfUrl;
-    link.download=filename();
-    link.textContent="↓ Download PDF";
+    currentPdfUrl = URL.createObjectURL(blob);
+
+    const link = $("downloadButton");
+    link.href = currentPdfUrl;
+    link.download = filename();
+    link.textContent = "↓ Download PDF";
     link.classList.remove("hidden");
 
     status("PDF created successfully! Now click Download PDF.","success");
-    link.scrollIntoView({behavior:"smooth",block:"nearest"});
+
+    link.scrollIntoView({
+      behavior:"smooth",
+      block:"nearest"
+    });
+
   }catch(error){
-    status(error.message||"Could not create PDF. Please try again.","error");
+    status(error.message || "Could not create PDF. Please try again.","error");
   }finally{
-    button.disabled=false;
-    button.textContent="Create PDF";
+    button.disabled = false;
+    button.textContent = "Create PDF";
   }
 });
 
+/* Show congratulations when download is requested */
 $("downloadButton").addEventListener("click",()=>{
-  status("Your PDF download has been started.","success");
+  $("successBox").classList.remove("hidden");
+
+  $("successBox").scrollIntoView({
+    behavior:"smooth",
+    block:"nearest"
+  });
+
+  status("Congratulations! Your PDF download has started.","success");
+
+  playSuccessSound();
 });
 </script>
+
 </body>
-  </html>
+</html>
