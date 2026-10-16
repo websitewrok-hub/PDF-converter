@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF Studio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDF Studio - File Tools</title>
 
 <style>
 *{box-sizing:border-box}
@@ -12,559 +12,905 @@ body{
   margin:0;
   font-family:Arial,sans-serif;
   background:#f5f7fb;
-  color:#182230
+  color:#182230;
 }
 
 header{
+  padding:18px 5%;
   background:#fff;
-  padding:16px 5%;
   border-bottom:1px solid #e5eaf2;
-  display:flex;
-  justify-content:space-between;
-  align-items:center
+  font-size:21px;
+  font-weight:800;
 }
 
-.logo{font-size:21px;font-weight:800}
-
-.container{max-width:750px;margin:35px auto;padding:15px}
+.container{
+  max-width:850px;
+  margin:25px auto;
+  padding:15px;
+}
 
 .card{
-  background:white;
+  background:#fff;
   border:1px solid #e5eaf2;
-  border-radius:17px;
-  padding:24px;
-  box-shadow:0 5px 25px #18223008
+  border-radius:16px;
+  padding:22px;
+  box-shadow:0 5px 20px #18223008;
 }
 
-h1{font-size:28px;margin:0 0 10px}
+h1{font-size:26px;margin:0 0 8px}
 
-.subtitle{color:#718096;font-size:14px;line-height:1.6}
+.muted{
+  color:#718096;
+  font-size:14px;
+  line-height:1.6;
+}
+
+.tools{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin:20px 0;
+}
+
+.tool{
+  padding:15px;
+  border:1px solid #e1e7f0;
+  background:#fff;
+  border-radius:12px;
+  text-align:left;
+  font-weight:700;
+  color:#344054;
+}
+
+.tool.active{
+  background:#3867f4;
+  color:white;
+  border-color:#3867f4;
+}
 
 label{
   display:block;
   font-size:14px;
   font-weight:700;
-  margin:20px 0 9px
+  margin:18px 0 8px;
 }
 
 input,textarea,select{
   width:100%;
-  padding:14px;
+  padding:13px;
   border:1px solid #dce3ed;
-  border-radius:10px;
-  background:#fbfcff;
+  border-radius:9px;
   font-size:15px;
-  outline:none
+  background:#fff;
 }
 
-input:focus,textarea:focus,select:focus{
-  border-color:#3867f4
+textarea{
+  height:150px;
+  resize:vertical;
 }
 
-textarea{height:190px;resize:vertical;line-height:1.7}
-
-button{
-  border:0;
-  border-radius:10px;
-  padding:14px 17px;
-  font-size:14px;
-  font-weight:700;
-  cursor:pointer
-}
-
-button:disabled{opacity:.6;cursor:not-allowed}
+button{cursor:pointer}
 
 .primary{
   width:100%;
-  margin-top:22px;
+  padding:15px;
   background:#3867f4;
-  color:white
-}
-
-.secondary{background:#eef3ff;color:#3867f4}
-
-.download{
-  display:block;
-  width:100%;
-  margin-top:15px;
-  padding:16px;
-  background:#16834a;
   color:white;
-  text-align:center;
-  text-decoration:none;
+  border:0;
   border-radius:10px;
-  font-weight:700
+  font-weight:700;
+  margin-top:20px;
 }
 
-.upload{
-  border:2px dashed #cbd7ef;
-  border-radius:13px;
-  padding:25px 15px;
-  text-align:center;
-  background:#f9fbff
+.primary:disabled{
+  opacity:.6;
+  cursor:wait;
 }
 
-.upload p{color:#718096;font-size:13px;line-height:1.6}
-
-.tabs{display:flex;gap:10px;margin:22px 0}
-
-.tabs button{flex:1;background:#f0f3f8;color:#475467}
-
-.tabs button.active{background:#3867f4;color:white}
-
-#status{font-size:13px;line-height:1.6;margin-top:15px;color:#718096}
+#status{
+  font-size:14px;
+  line-height:1.6;
+  margin-top:15px;
+  color:#667085;
+}
 
 #status.error{color:#d63838}
 #status.success{color:#16834a}
 
+#success{
+  background:#effbf3;
+  color:#16834a;
+  border:1px solid #b9ebc9;
+  padding:18px;
+  border-radius:12px;
+  margin-top:15px;
+  text-align:center;
+}
+
 .hidden{display:none!important}
 
-.file-list{font-size:13px;margin-top:10px}
-
-.file-row{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  padding:10px;
-  border:1px solid #e5eaf2;
-  border-radius:8px;
-  margin-top:7px;
-  overflow-wrap:anywhere
-}
-
-.file-row button{padding:5px 8px;color:#d63838;background:#fff0f0}
-
-#successBox{
-  margin-top:18px;
-  padding:22px 12px;
-  background:#effbf3;
-  border:1px solid #b9ebc9;
-  border-radius:13px;
+.download-link{
+  display:block;
+  padding:13px;
+  margin-top:10px;
+  background:#16834a;
+  color:white;
   text-align:center;
-  color:#16834a
+  text-decoration:none;
+  border-radius:9px;
+  font-weight:bold;
 }
 
-#successBox h2{margin:0 0 8px;font-size:22px}
-
-#successBox p{margin:0;font-size:14px;line-height:1.6}
-
-footer{text-align:center;color:#718096;font-size:12px;padding:25px}
+footer{
+  text-align:center;
+  padding:25px;
+  color:#718096;
+  font-size:12px;
+}
 
 @media(max-width:500px){
-  .container{margin:18px auto;padding:12px}
-  .card{padding:18px}
-  h1{font-size:24px}
+  .tools{grid-template-columns:1fr}
+  .container{padding:12px}
+  .card{padding:17px}
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <div class="logo">PDF Studio</div>
-  <button class="secondary" id="topButton">Create PDF ↓</button>
-</header>
+<header>PDF Studio</header>
 
 <main class="container">
-<section class="card" id="mainCard">
+<div class="card">
 
-  <h1>Create your PDF</h1>
-  <p class="subtitle">Choose your content, create a PDF, then download it to your device.</p>
+<h1>Free File Tools</h1>
 
-  <div class="tabs">
-    <button class="active" data-mode="images">Images to PDF</button>
-    <button data-mode="text">Text to PDF</button>
-  </div>
+<p class="muted">
+Convert, compress and resize your files directly in your browser.
+</p>
 
-  <label for="filename">PDF file name</label>
-  <input id="filename" value="My Document" maxlength="100" placeholder="Enter PDF file name">
+<div class="tools">
+<button class="tool active" data-tool="images">Images to PDF</button>
+<button class="tool" data-tool="text">Text to PDF</button>
+<button class="tool" data-tool="compress">Image Compressor</button>
+<button class="tool" data-tool="resize">Image Resizer</button>
+<button class="tool" data-tool="jpg">JPG to PNG</button>
+<button class="tool" data-tool="png">PNG to JPG</button>
+<button class="tool" data-tool="pdfjpg">PDF to JPG</button>
+<button class="tool" data-tool="pdfpng">PDF to PNG</button>
+<button class="tool" data-tool="background">Background Remover</button>
+</div>
 
-  <section id="imageSection">
-    <label>Select images</label>
-    <div class="upload">
-      <p>Choose JPG, PNG or WEBP images from your device.</p>
-      <button class="secondary" id="browseButton" type="button">Choose Images</button>
-      <input type="file" id="images" accept="image/jpeg,image/png,image/webp" multiple hidden>
-    </div>
+<label id="fileLabel" for="files">Choose images</label>
 
-    <div class="file-list" id="fileList"></div>
+<input
+  type="file"
+  id="files"
+  accept="image/jpeg,image/png,image/webp"
+  multiple
+>
 
-    <label for="pageSize">Page size</label>
-    <select id="pageSize">
-      <option value="a4">A4</option>
-      <option value="letter">US Letter</option>
-      <option value="fit">Fit image to page</option>
-    </select>
-  </section>
+<div id="imageOptions">
 
-  <section id="textSection" class="hidden">
-    <label for="heading">Document heading (optional)</label>
-    <input id="heading" placeholder="Example: My School Notes">
+<label for="pageSize">PDF page size</label>
 
-    <label for="content">Write or paste your text</label>
-    <textarea id="content" placeholder="Start writing here..."></textarea>
-  </section>
+<select id="pageSize">
+  <option value="fit" selected>Fit image to page (Full Photo)</option>
+  <option value="a4">A4 - Print Ready</option>
+  <option value="letter">US Letter</option>
+</select>
 
-  <button class="primary" id="createButton">Create PDF</button>
+<p class="muted">
+Fit Image keeps the complete photo visible without cropping.
+A4 is available for standard printing.
+</p>
 
-  <div id="status" role="status" aria-live="polite">
-    Choose your content to get started.
-  </div>
+</div>
 
-  <a id="downloadButton" class="download hidden" download>
-    ↓ Download PDF
-  </a>
+<div id="textOptions" class="hidden">
 
-  <div id="successBox" class="hidden" role="status" aria-live="polite">
-    <h2>🎉 Congratulations!</h2>
-    <p>Your PDF is ready. Your download has been started successfully.</p>
-  </div>
+<label for="heading">Document heading (optional)</label>
+<input id="heading" placeholder="My Document">
 
-</section>
+<label for="content">Your text</label>
+<textarea id="content" placeholder="Write or paste your text here"></textarea>
+
+</div>
+
+<div id="resizeOptions" class="hidden">
+
+<label for="width">Width (pixels)</label>
+<input id="width" type="number" min="1" max="10000" value="800">
+
+<label for="height">Height (pixels)</label>
+<input id="height" type="number" min="1" max="10000" value="800">
+
+</div>
+
+<div id="compressOptions" class="hidden">
+
+<label for="quality">Image quality</label>
+
+<select id="quality">
+  <option value=".9">High quality</option>
+  <option value=".7" selected>Balanced</option>
+  <option value=".4">Small file</option>
+</select>
+
+</div>
+
+<div id="pdfOptions" class="hidden">
+<p class="muted">Upload a PDF. Each page will be converted to an image.</p>
+</div>
+
+<div id="bgOptions" class="hidden">
+<p class="muted">
+Background removal requires an AI model and is not enabled in this browser-only version.
+</p>
+</div>
+
+<label id="nameLabel" for="filename">Output file name</label>
+
+<input id="filename" value="My Document" maxlength="100">
+
+<button id="create" class="primary">Create PDF</button>
+
+<div id="status" role="status" aria-live="polite">
+Choose a tool and select your files.
+</div>
+
+<div id="success" class="hidden" role="status">
+<h3>Congratulations!</h3>
+<p id="successText">Your file is ready.</p>
+</div>
+
+<div id="downloads"></div>
+
+</div>
 </main>
 
-<footer>Your files are processed in your browser.</footer>
+<footer>
+Your files are processed in your browser wherever possible.
+</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <script>
 const $ = id => document.getElementById(id);
 
-let mode = "images";
-let selectedFiles = [];
-let currentPdfUrl = null;
+let tool = "images";
+let outputUrls = [];
+let processing = false;
+let jobNumber = 0;
 
-function status(message,type=""){
+if(window.pdfjsLib){
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+}
+
+function setStatus(message,type=""){
   $("status").textContent = message;
   $("status").className = type;
 }
 
-function clearDownload(){
-  if(currentPdfUrl){
-    URL.revokeObjectURL(currentPdfUrl);
-    currentPdfUrl = null;
-  }
+function clearOutputs(){
+  outputUrls.forEach(url => URL.revokeObjectURL(url));
+  outputUrls = [];
 
-  $("downloadButton").classList.add("hidden");
-  $("downloadButton").removeAttribute("href");
-  $("successBox").classList.add("hidden");
+  $("downloads").replaceChildren();
+  $("success").classList.add("hidden");
 }
 
-document.querySelectorAll(".tabs button").forEach(button=>{
-  button.addEventListener("click",()=>{
-    mode = button.dataset.mode;
+function safeName(){
+  return ($("filename").value.trim() || "My Document")
+    .replace(/\.(pdf|png|jpe?g)$/i,"")
+    .replace(/[\\/:*?"<>|]/g,"_")
+    .slice(0,100) || "My Document";
+}
 
-    document.querySelectorAll(".tabs button").forEach(b=>{
-      b.classList.toggle("active",b===button);
-    });
+function setTool(next){
+  if(processing) return;
 
-    $("imageSection").classList.toggle("hidden",mode!=="images");
-    $("textSection").classList.toggle("hidden",mode!=="text");
+  tool = next;
 
-    clearDownload();
-    status("Ready to create your PDF.");
+  document.querySelectorAll(".tool").forEach(button => {
+    button.classList.toggle("active",button.dataset.tool === tool);
   });
-});
 
-$("topButton").addEventListener("click",()=>{
-  $("mainCard").scrollIntoView({behavior:"smooth"});
-});
+  $("textOptions").classList.toggle("hidden",tool !== "text");
+  $("resizeOptions").classList.toggle("hidden",tool !== "resize");
+  $("compressOptions").classList.toggle("hidden",tool !== "compress");
 
-$("browseButton").addEventListener("click",()=>{
-  $("images").click();
-});
-
-$("images").addEventListener("change",event=>{
-  const allowed = ["image/jpeg","image/png","image/webp"];
-  const incoming = Array.from(event.target.files);
-  const valid = incoming.filter(file=>allowed.includes(file.type));
-
-  selectedFiles.push(...valid);
-  renderFiles();
-  clearDownload();
-
-  status(
-    valid.length+" image(s) added.",
-    valid.length ? "success" : "error"
+  $("pdfOptions").classList.toggle(
+    "hidden",
+    !["pdfjpg","pdfpng"].includes(tool)
   );
 
-  event.target.value = "";
+  $("bgOptions").classList.toggle("hidden",tool !== "background");
+
+  $("imageOptions").classList.toggle("hidden",tool !== "images");
+
+  const pdfTool = ["pdfjpg","pdfpng"].includes(tool);
+
+  $("files").accept = pdfTool
+    ? ".pdf,application/pdf"
+    : "image/jpeg,image/png,image/webp";
+
+  $("files").multiple = !pdfTool;
+
+  $("fileLabel").textContent = pdfTool
+    ? "Choose a PDF file"
+    : "Choose images";
+
+  $("create").textContent =
+    ["images","text"].includes(tool)
+    ? "Create PDF"
+    : "Process Files";
+
+  clearOutputs();
+  setStatus("Ready. Choose your files.");
+}
+
+document.querySelectorAll(".tool").forEach(button => {
+  button.addEventListener("click",() => setTool(button.dataset.tool));
 });
 
-function renderFiles(){
-  const list = $("fileList");
-  list.innerHTML = "";
-
-  selectedFiles.forEach((file,index)=>{
-    const row = document.createElement("div");
-    row.className = "file-row";
-
-    const name = document.createElement("span");
-    name.textContent = file.name;
-
-    const remove = document.createElement("button");
-    remove.textContent = "Remove";
-    remove.type = "button";
-
-    remove.onclick = ()=>{
-      selectedFiles.splice(index,1);
-      renderFiles();
-      clearDownload();
-      status("Image removed.");
-    };
-
-    row.append(name,remove);
-    list.appendChild(row);
-  });
-}
-
-function filename(){
-  let name = $("filename").value.trim() || "My Document";
-  name = name.replace(/\.pdf$/i,"").replace(/[\\/:*?"<>|]/g,"_");
-
-  return (name || "My Document") + ".pdf";
-}
-
 function readImage(file){
-  return new Promise((resolve,reject)=>{
+  return new Promise((resolve,reject) => {
     const reader = new FileReader();
 
-    reader.onload = ()=>{
+    reader.onload = () => {
       const img = new Image();
 
-      img.onload = ()=>resolve({
+      img.onload = () => resolve({
         img,
         data:reader.result,
         file
       });
 
-      img.onerror = ()=>reject(new Error("Could not read "+file.name));
+      img.onerror = () => reject(
+        new Error("Could not read image: " + file.name)
+      );
+
       img.src = reader.result;
     };
 
-    reader.onerror = ()=>reject(new Error("Could not open "+file.name));
+    reader.onerror = () => reject(
+      new Error("Could not open file: " + file.name)
+    );
+
     reader.readAsDataURL(file);
   });
 }
 
-async function imagesToPdf(){
-  if(!selectedFiles.length){
-    throw new Error("Please choose at least one image.");
+function addDownload(blob,name){
+  const url = URL.createObjectURL(blob);
+  outputUrls.push(url);
+
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = name;
+  link.textContent = "Download " + name;
+  link.className = "download-link";
+
+  $("downloads").appendChild(link);
+
+  return link;
+}
+
+function success(message){
+  $("successText").textContent = message;
+  $("success").classList.remove("hidden");
+
+  $("success").scrollIntoView({
+    behavior:"smooth",
+    block:"nearest"
+  });
+
+  playSound();
+}
+
+function playSound(){
+  try{
+    const AudioContextClass =
+      window.AudioContext || window.webkitAudioContext;
+
+    if(!AudioContextClass) return;
+
+    const ctx = new AudioContextClass();
+
+    const play = () => {
+      [523.25,659.25,783.99,1046.5].forEach((frequency,index) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.frequency.value = frequency;
+
+        const start = ctx.currentTime + index * 0.13;
+
+        gain.gain.setValueAtTime(0.001,start);
+        gain.gain.exponentialRampToValueAtTime(0.12,start + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001,start + 0.24);
+
+        osc.start(start);
+        osc.stop(start + 0.25);
+      });
+
+      setTimeout(() => ctx.close(),1000);
+    };
+
+    if(ctx.state === "suspended"){
+      ctx.resume().then(play).catch(() => ctx.close());
+    }else{
+      play();
+    }
+
+  }catch(error){}
+}
+
+function canvasBlob(canvas,type,quality){
+  return new Promise((resolve,reject) => {
+    canvas.toBlob(blob => {
+      if(blob) resolve(blob);
+      else reject(new Error("Could not process image."));
+    },type,quality);
+  });
+}
+
+/* Images to PDF */
+
+async function makePdf(){
+  const files = Array.from($("files").files);
+
+  if(!files.length){
+    throw new Error("Please select your images first.");
   }
 
   const {jsPDF} = window.jspdf;
   const size = $("pageSize").value;
+
   let pdf = null;
 
-  for(let i=0;i<selectedFiles.length;i++){
-    status("Preparing image "+(i+1)+" of "+selectedFiles.length+"...");
+  for(let i = 0; i < files.length; i++){
+    setStatus(
+      "Processing image " + (i+1) + " of " + files.length + "..."
+    );
 
-    const {img,data,file} = await readImage(selectedFiles[i]);
+    const {img} = await readImage(files[i]);
+
+    /*
+      Convert images to JPEG for consistent PDF output.
+      This supports JPEG, PNG and WebP inputs.
+    */
+
+    const canvas = document.createElement("canvas");
+
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+
+    const ctx = canvas.getContext("2d");
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(img,0,0);
+
+    const imageBlob = await canvasBlob(canvas,"image/jpeg",0.95);
+    const imageData = await blobToDataURL(imageBlob);
+
+    let pageWidth;
+    let pageHeight;
 
     if(size === "fit"){
-      let w = img.width * 25.4 / 96;
-      let h = img.height * 25.4 / 96;
+      /*
+        Fit the complete photo to a custom-sized page.
+        The whole image remains visible without cropping.
+      */
 
-      const scale = Math.min(270/w,270/h,1);
-      w *= scale;
-      h *= scale;
+      const mmPerPixel = 25.4 / 96;
 
-      const orientation = w > h ? "landscape" : "portrait";
+      pageWidth = img.naturalWidth * mmPerPixel;
+      pageHeight = img.naturalHeight * mmPerPixel;
+
+      const maxDimension = 500;
+
+      const scale = Math.min(
+        maxDimension / pageWidth,
+        maxDimension / pageHeight,
+        1
+      );
+
+      pageWidth *= scale;
+      pageHeight *= scale;
 
       if(!pdf){
         pdf = new jsPDF({
-          orientation,
+          orientation:pageWidth > pageHeight ? "landscape" : "portrait",
           unit:"mm",
-          format:[w,h]
+          format:[pageWidth,pageHeight],
+          compress:true
         });
       }else{
-        pdf.addPage([w,h],orientation);
+        pdf.addPage(
+          [pageWidth,pageHeight],
+          pageWidth > pageHeight ? "landscape" : "portrait"
+        );
       }
 
       pdf.addImage(
-        data,
-        file.type === "image/png" ? "PNG" : "JPEG",
-        0,0,w,h
+        imageData,
+        "JPEG",
+        0,
+        0,
+        pageWidth,
+        pageHeight,
+        undefined,
+        "FAST"
       );
 
     }else{
+      /*
+        A4 and US Letter:
+        Keep the complete image inside the page.
+        Never crop the image.
+      */
+
       if(!pdf){
         pdf = new jsPDF({
           orientation:"portrait",
           unit:"mm",
-          format:size
+          format:size,
+          compress:true
         });
       }else{
         pdf.addPage(size,"portrait");
       }
 
-      const pw = pdf.internal.pageSize.getWidth();
-      const ph = pdf.internal.pageSize.getHeight();
-      const margin = 10;
+      pageWidth = pdf.internal.pageSize.getWidth();
+      pageHeight = pdf.internal.pageSize.getHeight();
+
+      const margin = 5;
+
+      const availableWidth = pageWidth - margin * 2;
+      const availableHeight = pageHeight - margin * 2;
 
       const scale = Math.min(
-        (pw-2*margin)/img.width,
-        (ph-2*margin)/img.height
+        availableWidth / img.naturalWidth,
+        availableHeight / img.naturalHeight
       );
 
-      const w = img.width * scale;
-      const h = img.height * scale;
-      const x = (pw-w)/2;
-      const y = (ph-h)/2;
+      const drawWidth = img.naturalWidth * scale;
+      const drawHeight = img.naturalHeight * scale;
+
+      const x = (pageWidth - drawWidth) / 2;
+      const y = (pageHeight - drawHeight) / 2;
 
       pdf.addImage(
-        data,
-        file.type === "image/png" ? "PNG" : "JPEG",
-        x,y,w,h
+        imageData,
+        "JPEG",
+        x,
+        y,
+        drawWidth,
+        drawHeight,
+        undefined,
+        "FAST"
       );
     }
   }
 
-  return pdf;
+  if(!pdf) throw new Error("Could not create PDF.");
+
+  return pdf.output("blob");
 }
 
-function textToPdf(){
+function blobToDataURL(blob){
+  return new Promise((resolve,reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("Could not read image data."));
+
+    reader.readAsDataURL(blob);
+  });
+}
+
+/* Text to PDF */
+
+async function textPdf(){
   const text = $("content").value.trim();
-  const heading = $("heading").value.trim();
 
   if(!text){
-    throw new Error("Please write or paste some text first.");
+    throw new Error("Please enter some text.");
   }
 
   const {jsPDF} = window.jspdf;
-  const pdf = new jsPDF({unit:"mm",format:"a4"});
-  const margin = 18;
-  const pageHeight = pdf.internal.pageSize.getHeight();
-  const width = pdf.internal.pageSize.getWidth()-margin*2;
 
+  const pdf = new jsPDF({
+    unit:"mm",
+    format:"a4",
+    compress:true
+  });
+
+  const margin = 18;
   let y = margin;
+
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const width = pdf.internal.pageSize.getWidth() - margin * 2;
+
+  const heading = $("heading").value.trim();
 
   if(heading){
     pdf.setFont("helvetica","bold");
     pdf.setFontSize(18);
 
-    const lines = pdf.splitTextToSize(heading,width);
-    pdf.text(lines,margin,y);
+    const headingLines = pdf.splitTextToSize(heading,width);
 
-    y += lines.length*8+7;
+    for(const line of headingLines){
+      if(y > pageHeight - margin){
+        pdf.addPage();
+        y = margin;
+      }
+
+      pdf.text(line,margin,y);
+      y += 8;
+    }
+
+    y += 5;
   }
 
   pdf.setFont("helvetica","normal");
   pdf.setFontSize(11);
 
   for(const paragraph of text.split(/\r?\n/)){
-    const lines = paragraph.trim()
-      ? pdf.splitTextToSize(paragraph,width)
-      : [" "];
+    const lines = pdf.splitTextToSize(paragraph || " ",width);
 
     for(const line of lines){
-      if(y > pageHeight-margin){
+      if(y > pageHeight - margin){
         pdf.addPage();
         y = margin;
       }
 
-      pdf.text(line || " ",margin,y);
+      pdf.text(line,margin,y);
       y += 6;
     }
 
     y += 2;
   }
 
-  return pdf;
+  return pdf.output("blob");
 }
 
-/* Congratulations sound */
-function playSuccessSound(){
-  try{
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if(!AudioContext) return;
+/* Image tools */
 
-    const audio = new AudioContext();
+async function imageTool(){
+  const files = Array.from($("files").files);
 
-    const notes = [523.25,659.25,783.99,1046.50];
-
-    notes.forEach((frequency,index)=>{
-      const oscillator = audio.createOscillator();
-      const gain = audio.createGain();
-
-      oscillator.connect(gain);
-      gain.connect(audio.destination);
-
-      oscillator.type = "sine";
-      oscillator.frequency.value = frequency;
-
-      const start = audio.currentTime + index*0.16;
-
-      gain.gain.setValueAtTime(0.001,start);
-      gain.gain.exponentialRampToValueAtTime(0.2,start+0.03);
-      gain.gain.exponentialRampToValueAtTime(0.001,start+0.32);
-
-      oscillator.start(start);
-      oscillator.stop(start+0.33);
-    });
-
-    setTimeout(()=>audio.close(),1200);
-  }catch(error){
-    console.log("Sound unavailable",error);
+  if(!files.length){
+    throw new Error("Please select at least one image.");
   }
-}
 
-$("createButton").addEventListener("click",async()=>{
-  const button = $("createButton");
+  let count = 0;
 
-  button.disabled = true;
-  button.textContent = "Creating PDF...";
+  for(let i = 0; i < files.length; i++){
+    setStatus("Processing " + (i+1) + " of " + files.length + "...");
 
-  clearDownload();
+    const {img} = await readImage(files[i]);
 
-  try{
-    if(!window.jspdf){
-      throw new Error("PDF library could not load. Check your internet connection.");
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    let width = img.naturalWidth;
+    let height = img.naturalHeight;
+
+    if(tool === "resize"){
+      width = Number($("width").value);
+      height = Number($("height").value);
+
+      if(
+        !Number.isInteger(width) ||
+        !Number.isInteger(height) ||
+        width < 1 ||
+        height < 1 ||
+        width > 10000 ||
+        height > 10000
+      ){
+        throw new Error("Enter valid image dimensions.");
+      }
     }
 
-    const pdf = mode === "images"
-      ? await imagesToPdf()
-      : textToPdf();
+    canvas.width = width;
+    canvas.height = height;
 
-    const blob = pdf.output("blob");
+    let mime = "image/png";
+    let extension = "png";
+    let quality = 1;
 
-    currentPdfUrl = URL.createObjectURL(blob);
+    if(tool === "png" || tool === "compress"){
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0,0,width,height);
+    }
 
-    const link = $("downloadButton");
-    link.href = currentPdfUrl;
-    link.download = filename();
-    link.textContent = "↓ Download PDF";
-    link.classList.remove("hidden");
+    ctx.drawImage(img,0,0,width,height);
 
-    status("PDF created successfully! Now click Download PDF.","success");
+    if(tool === "png" || tool === "compress"){
+      mime = "image/jpeg";
+      extension = "jpg";
+    }
 
-    link.scrollIntoView({
-      behavior:"smooth",
-      block:"nearest"
+    if(tool === "compress"){
+      quality = Number($("quality").value);
+    }
+
+    const blob = await canvasBlob(canvas,mime,quality);
+
+    addDownload(
+      blob,
+      safeName() + "_" + (i+1) + "." + extension
+    );
+
+    count++;
+  }
+
+  return count;
+}
+
+/* PDF to JPG or PNG */
+
+async function pdfToImages(){
+  const file = $("files").files[0];
+
+  if(!file){
+    throw new Error("Please select a PDF file.");
+  }
+
+  if(!window.pdfjsLib){
+    throw new Error("PDF converter library could not load. Check your internet connection.");
+  }
+
+  const data = await file.arrayBuffer();
+
+  const doc = await pdfjsLib.getDocument({data}).promise;
+
+  const extension = tool === "pdfjpg" ? "jpg" : "png";
+
+  const mime = tool === "pdfjpg"
+    ? "image/jpeg"
+    : "image/png";
+
+  for(let pageNo = 1; pageNo <= doc.numPages; pageNo++){
+    setStatus(
+      "Converting page " + pageNo + " of " + doc.numPages + "..."
+    );
+
+    const page = await doc.getPage(pageNo);
+
+    const viewport = page.getViewport({scale:1.5});
+
+    const canvas = document.createElement("canvas");
+
+    canvas.width = Math.ceil(viewport.width);
+    canvas.height = Math.ceil(viewport.height);
+
+    await page.render({
+      canvasContext:canvas.getContext("2d"),
+      viewport
+    }).promise;
+
+    const blob = await canvasBlob(canvas,mime,0.92);
+
+    addDownload(
+      blob,
+      safeName() + "_page_" + pageNo + "." + extension
+    );
+  }
+
+  return doc.numPages;
+}
+
+/* Main button */
+
+$("create").addEventListener("click",async()=>{
+  if(processing) return;
+
+  processing = true;
+
+  const button = $("create");
+
+  button.disabled = true;
+
+  /*
+    Every new operation clears previous download links.
+    A unique job number prevents an old operation from
+    updating the current result.
+  */
+
+  const currentJob = ++jobNumber;
+
+  clearOutputs();
+
+  try{
+    if(tool === "background"){
+      throw new Error(
+        "Background removal needs an AI model. This feature is not enabled yet."
+      );
+    }
+
+    let blob = null;
+
+    if(tool === "images"){
+      blob = await makePdf();
+    }
+
+    else if(tool === "text"){
+      blob = await textPdf();
+    }
+
+    else if(["compress","resize","jpg","png"].includes(tool)){
+      const count = await imageTool();
+
+      if(currentJob !== jobNumber) return;
+
+      success(count + " image(s) processed successfully.");
+
+      setStatus("Processing complete.","success");
+
+      return;
+    }
+
+    else if(["pdfjpg","pdfpng"].includes(tool)){
+      const count = await pdfToImages();
+
+      if(currentJob !== jobNumber) return;
+
+      success(count + " PDF page(s) converted successfully.");
+
+      setStatus("Conversion complete.","success");
+
+      return;
+    }
+
+    if(!blob || blob.size === 0){
+      throw new Error("The output file is empty. Please try again.");
+    }
+
+    if(currentJob !== jobNumber) return;
+
+    /*
+      A new Blob and new object URL are created
+      for every successful PDF generation.
+    */
+
+    const freshBlob = new Blob([blob],{
+      type:"application/pdf"
     });
 
+    const outputName = safeName() + ".pdf";
+
+    addDownload(freshBlob,outputName);
+
+    success(
+      "Your new PDF is ready. Click the green download button below to save it."
+    );
+
+    setStatus("PDF created successfully.","success");
+
   }catch(error){
-    status(error.message || "Could not create PDF. Please try again.","error");
+    setStatus(
+      error.message || "Something went wrong. Please try again.",
+      "error"
+    );
+
   }finally{
+    processing = false;
     button.disabled = false;
-    button.textContent = "Create PDF";
   }
-});
-
-/* Show congratulations when download is requested */
-$("downloadButton").addEventListener("click",()=>{
-  $("successBox").classList.remove("hidden");
-
-  $("successBox").scrollIntoView({
-    behavior:"smooth",
-    block:"nearest"
-  });
-
-  status("Congratulations! Your PDF download has started.","success");
-
-  playSuccessSound();
 });
 </script>
 
 </body>
-</html>
+  </html>
